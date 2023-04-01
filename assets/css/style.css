@@ -64,6 +64,7 @@ body{
 
 /*----------------------------------------------------------------------------------------------*/
 
+/*---------------------------------------main----------------------------------------------------*/
 main{
     position: relative;
     display: flex;
@@ -184,10 +185,13 @@ hr{
 }
 
 #submit-form{
+    display: inline-block;
     margin-top: 1rem;
 }
 
+
 #final{
+    display: inline-block;
     margin-top: 1rem ;
 }
 
@@ -220,6 +224,10 @@ hr{
     align-items: flex-start;
 }
 
+#hs-header{
+    padding-bottom: 2rem;
+}
+
 #hs-form{
     padding: 2rem;
 }
@@ -235,6 +243,7 @@ hr{
 #go-back{
     padding-left: 5rem;
     padding-right: 5rem;
+    margin-left: 0;
     height: 4rem;
     background-color: var(--dark-color);
     color: var(--light-color);
