@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
+    <section id="parent-time">
+        <p id="time">Time: <span data-max="75" id="time-left">0</span></p>
+    </section>
     <main>
         <section id="start">
             <section id="start-sec">
@@ -19,19 +22,18 @@
             </section>
         </section>  
         <section id="questions">
-            <section id="question-answer">
-                <p id="time">Time: <span id="time-left">sdsd</span></p>
-                <p id="quesion-text">question text</p>
+            <section id="question-sec">
+                <p id="question-text">Qusetion text</p>
                 <ol id="list">
-                    <li id="option1"></li>
-                    <li id="option2"></li>
-                    <li id="option3"></li>
-                    <li id="option4"></li>
+                    <li data-no="1. " class="list-item" id="option1">option1</li>
+                    <li data-no="2. "class="list-item" id="option2">option2</li>
+                    <li data-no="3. "class="list-item" id="option3">option3</li>
+                    <li data-no="4. "class="list-item" id="option4">option4</li>
                 </ol>
-                <section id="answer-sec">
-                    <br>
-                    <p id="answer"></p>
-                </section>
+               <section id="answer-sec">
+                    <hr>
+                    <p id="answer">answer</p>
+                </section> 
             </section>
         </section>
         <section id="submit">
