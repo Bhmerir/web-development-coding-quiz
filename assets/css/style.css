@@ -15,7 +15,7 @@ html {
 }
   
 body {
-    font-size: 1.75rem;
+    font-size: 2rem;
     min-height: 100%;
     line-height: 200%;
     background-color: var(--all-bg-color);
@@ -56,15 +56,16 @@ main{
     width: 100%;
     align-items: center;
 }
-/*----------------------------------start section------------------        --------------*/
+/*--------------------------------------start section--------------------------------------*/
 #start{
+    display:flex;
+    justify-content: center;
     position: absolute;
-    border:5px solid;
-    z-index: 10;
+    z-index: 1;
 }
 
 #start-sec{
-    margin-top: 20rem;
+    margin-bottom: 20rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -92,10 +93,35 @@ main{
 
 /*----------------------------------------submit------------------------------------------------*/
 #submit{
+    display:flex;
+    justify-content: center;
     position: absolute;
-    border:5px solid;
-    margin: auto;
-    z-index: 1;
+    z-index: 10;
+}
+
+#submit-sec{
+    margin-bottom: 25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: solid;
+}
+
+#submit-form{
+    margin-top: 1rem;
+}
+
+#initial{
+    height: 3rem;
+
+}
+
+#submit-btn{
+    padding-left: 5rem;
+    padding-right: 5rem;
+    height: 3rem;
+    background-color: var(--dark-color);
+    color: var(--light-color);
 }
 /*---------------------------------------------------------------------------------------------*/
 
