@@ -1,0 +1,111 @@
+:root{
+    --all-bg-color :#F7F0E2;
+    --light-color: white;
+    --dark-color: #475AA9;
+}
+*{
+    font-family: sans-serif;
+    box-sizing: border-box;
+    
+}
+
+html {
+    height: 100%;
+    font-size: 62.5%;
+}
+  
+body {
+    font-size: 1.75rem;
+    min-height: 100%;
+    line-height: 200%;
+    background-color: var(--all-bg-color);
+}
+
+h1,
+h2
+{
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 3.5rem;
+}
+
+h2 {
+  font-size: 3rem;
+}
+
+#start,
+#questions,
+#submit,
+#high-score{
+    background-color: var(--all-bg-color);
+    width: 800px;
+    height: 800px;
+}
+
+
+main{
+    position: relative;
+    display: flex;
+  /*  flex-wrap: wrap;
+    flex-direction: column;*/
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+}
+/*----------------------------------start section------------------        --------------*/
+#start{
+    position: absolute;
+    border:5px solid;
+    z-index: 10;
+}
+
+#start-sec{
+    margin-top: 20rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#start-text{
+    margin-left: 5rem;
+    margin-right: 5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+#start-btn{
+    padding-left: 5rem;
+    padding-right: 5rem;
+    height: 4rem;
+    background-color: var(--dark-color);
+    color: var(--light-color);
+}
+/*----------------------------------------------------------------------------------------------*/
+
+/*--------------------------------------questions-----------------------------------------------*/
+/*----------------------------------------------------------------------------------------------*/
+
+/*----------------------------------------submit------------------------------------------------*/
+#submit{
+    position: absolute;
+    border:5px solid;
+    margin: auto;
+    z-index: 1;
+}
+/*---------------------------------------------------------------------------------------------*/
+
+/*----------------------------------------high score-------------------------------------------*/
+#high-score{
+    position: absolute;
+    border:5px solid;
+    margin: auto;
+    z-index: 1;
+}
+/*---------------------------------------------------------------------------------------------*/
+
+

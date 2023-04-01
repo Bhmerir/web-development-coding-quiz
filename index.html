@@ -5,18 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Development Coding Quiz</title>
+    <link rel="stylesheet" href="./assets/css/reset.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
     <main>
         <section id="start">
-            <h1>Web Development Coding Quiz</h1>
-            <p>Try to answer the following code-related questions within the time limit. 
-                Keep in mind that incorrect answers will penalize your score/time by 10 seconds!</p>
-             <button id="start-btn" type="button">Start Quiz</button>   
-            <section id="questions">
+            <section id="start-sec">
+                <h1>Web Development Coding Quiz</h1>
+                <p id="start-text">Try to answer the following code-related questions within the time limit. 
+                    Keep in mind that incorrect answers will penalize your score/time by 10 seconds!</p>
+                <button id="start-btn" type="button">Start Quiz</button> 
+            </section>
+        </section>  
+        <section id="questions">
+            <section id="question-answer">
                 <p id="time">Time: <span id="time-left"></span></p>
-                <section id="question"></section>
+                <p id="quesion-text">asghjdgahdfa</p>
                 <ol id="list">
                     <li id="option1"></li>
                     <li id="option2"></li>
@@ -27,26 +32,26 @@
                     <br>
                     <p id="answer"></p>
                 </section>
-                <section id="submit">
-                    <h2 id="result"></h2>
-                    <p id="final">Your final score is <span id="score"></span>.</p>
-                    <form id="submit-form">
-                        <label for="initial">Enter initials: </label>
-                        <input type="text" id="initial" name="initial" size="30">
-                        <button type="button" id="submit" class="btn">Submit</button>
-                    </form>
-                    <section id="high-score">
-                        <form id="hs-form">
-                            <h2 id="hs-header">Highscores</h2>
-                            <p id="initial-score"></p>
-                            <button type="button" id="go-back" class="btn">Go Back</button>
-                            <button type="button" id="clear" class="btn">Clear Highscores</button>
-                        </form>
-                    </section>
-                </section>
             </section>
         </section>
-    </main>
+        <section id="submit">
+            <h2 id="result"></h2>
+            <p id="final">Your final score is <span id="score"></span>.</p>
+            <form id="submit-form">
+                <label for="initial">Enter initials: </label>
+                <input type="text" id="initial" name="initial" size="30">
+                <button type="button" id="submit-btn" class="btn">Submit</button>
+            </form>
+        </section>
+        <section id="high-score">
+            <form id="hs-form">
+                <h2 id="hs-header">Highscores</h2>
+                <p id="initial-score"></p>
+                <button type="button" id="go-back" class="btn">Go Back</button>
+                <button type="button" id="clear" class="btn">Clear Highscores</button>
+            </form>
+        </section>
+     </main>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
