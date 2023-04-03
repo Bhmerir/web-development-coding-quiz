@@ -4,18 +4,9 @@ var questionsPage = document.querySelector("#questions");
 var submitPage = document.querySelector("#submit");
 var highSorePage = document.querySelector("#high-score");
 var body = document.querySelector("body");
-var answer = document.querySelector("#answer");
-//from page of submit
-var result = document.querySelector("#result");
-var score = document.querySelector("#score");
-//from page of high-score
-var hsHeader = document.querySelector("#hs-header");
-var initialScore = document.querySelector("#initial-score");
-var clearBtn = document.querySelector("#clear");
-var goBackBtn = document.querySelector("#go-back"); 
+var answerSec = document.querySelector("#answer-sec");
 var secondLeft = 0;
 var currentIndex = 0;
-var timeInterval;
 
 var questionList = [
     {
@@ -120,23 +111,59 @@ function refreshPage(){
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------set timer----------------------------------------------------------------------
-function setTimer(){    
-    timeInterval = setInterval(function() {
+function setTimer(continueCountDown){
+    //from page of submit
+    var result = document.querySelector("#result");
+    var score = document.querySelector("#score");
+    //from page of high-score
+    var hsHeader = document.querySelector("#hs-header");
+    var initialScore = document.querySelector("#initial-score");
+    var clearBtn = document.querySelector("#clear");
+    var goBackBtn = document.querySelector("#go-back");
+    
+    //continueCountDown is true at the start of quiz, and it is false when user answered all the questions before time out
+    
+    var timeInterval = setInterval(function() {
         secondLeft--;
         timeLeftSpan.textContent = secondLeft;
         //If there is no second left, we stop the timer 
         if(secondLeft === 0){
             clearInterval(timeInterval);
-            console.log("136: "+currentIndex + " "+ questionList.length)
-            if(currentIndex != (questionList.length)){
-                showResult(false);
+            if(currentIndex < (questionList.length -1)){
+                console.log("line:132 ci: "+ currentIndex)
+                //If there is no second left, and user haven't answered all questions, it's game over
+                questionsPage.setAttribute("style", "z-index: 1;")
+                highSorePage.setAttribute("style", "z-index: 10;")
+                hsHeader.textContent = "Game Over!"; 
+                hsHeader.setAttribute("style", "font-size: 6rem;");
+                initialScore.setAttribute("style", "display: none;");
+                clearBtn.setAttribute("style", "display: none;");
+                goBackBtn.setAttribute("style", "margin-left: 9rem;");
             }
             else{
                 //If there is no second left, but user have answered all questions, we show all done and ask for inital
-                 showResult(true);
+                questionsPage.setAttribute("style", "z-index: 1;")
+                submitPage.setAttribute("style", "z-index: 10;")
+                result.textContent = "All Done!";
+                score.textContent = secondLeft;    
             }
-        }
-    }, 1000);       
+            questionsPage.setAttribute("style", "z-index: 1;")
+            submitPage.setAttribute("style", "z-index: 10;")
+        } 
+        else{
+            console.log("line 154: ccd:"+continueCountDown);
+            if(continueCountDown  == false){
+                console.log("line 156: false")
+                //When user answered all the questions before time out, we stop counter and how them their score and ask for initial
+                clearInterval(timeInterval);
+                score.textContent = secondLeft; 
+                questionsPage.setAttribute("style", "z-index: 1;")
+                submitPage.setAttribute("style", "z-index: 10;")
+                result.textContent = "All Done!";
+            }
+        }  
+
+    }, 1000);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -149,13 +176,12 @@ function startQuiz(){
     currentIndex = 0;
     timeLeftSpan.textContent = timeLeftSpan.getAttribute("data-max");
     secondLeft = parseInt(timeLeftSpan.textContent);
-    setTimer();
+    setTimer(true);
     nextQuestions();
 }
 
 //------------------------------------------------------------next questions-----------------------------------------------------------------
 function nextQuestions(){
-    answer.textContent = "";
     var questionText = document.querySelector("#question-text");
     var option1 = document.querySelector("#option1");
     var option2 = document.querySelector("#option2");
@@ -172,63 +198,41 @@ function nextQuestions(){
 
 //---------------------------------------------------------check answer----------------------------------------------------------------------
 function checkAnswer(chosenOption){
+    var answer = document.querySelector("#answer");
+
     if ((parseInt(chosenOption) - 1) === questionList[currentIndex].correctAnswer){
+        answerSec.setAttribute("style", "display: flex;")
         answer.setAttribute("style", "color: green;");
         answer.textContent = "Correct!👏"
     }
     else{
+        answerSec.setAttribute("style", "display: flex;")
         answer.setAttribute("style", "color: red;");
         answer.textContent = "Wrong!❌";
         secondLeft -= 5;
         if(secondLeft < 0){
-            console.log("else: line 219: "+secondLeft)
             secondLeft = 0;
-            clearInterval(timeInterval);
-            timeInterval = null;
-            // false means loss
-            showResult(false);
+            setTimer(false);
         }
         timeLeftSpan.textContent = secondLeft;
     }
-    if(currentIndex != questionList.length -1 )
+    answerSec.setAttribute("style", "display: flex;") 
+    currentIndex++;
+    console.log("line 221"+currentIndex + " "+questionList.length)
+    if(currentIndex == questionList.length)
     {
-        currentIndex++;
+        console.log("line:220 ci: "+ currentIndex)
+        setTimer(false);
+    }
+    else{
+        answerSec.setAttribute("style", "display: none;")
         nextQuestions();
     } 
-    else{;
-        //When user answered all the questions before time out, we stop counter and how them their score and ask for initial
-        clearInterval(timeInterval);
-        timeInterval = null;
-        score.textContent = secondLeft; 
-        // True means win
-        showResult(true)
-
-    }
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
-//------------------------------------------------------show result of quiz------------------------------------------------------------------
-/* if user wins (win = true) , the submit page is shown to ask for initial, and 
-if they lose, the high score page is shown to show game over*/
-function showResult(win){
-    if (win){
-        score.textContent = secondLeft; 
-        questionsPage.setAttribute("style", "z-index: 1;")
-        submitPage.setAttribute("style", "z-index: 10;")
-        result.textContent = "All Done!";
-    }
-    else{                
-        questionsPage.setAttribute("style", "z-index: 1;")
-        highSorePage.setAttribute("style", "z-index: 10;")
-        hsHeader.textContent = "Game Over!"; 
-        hsHeader.setAttribute("style", "font-size: 6rem;");
-        initialScore.setAttribute("style", "display: none;");
-        clearBtn.setAttribute("style", "display: none;");
-        goBackBtn.setAttribute("style", "margin-left: 9rem;");
-
-    }
-}
+//------------------------------------------------------------set timer----------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
 

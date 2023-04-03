@@ -142,6 +142,7 @@ main{
     color: var(--light-color);
     margin-bottom: 1rem;
     width: fit-content;
+    padding-right: 2rem;
 }
 
 .list-item:before {
@@ -154,7 +155,7 @@ main{
 }
   
 #answer-sec{
-    display: inline-block;
+    display: block;
 }
 
 hr{
