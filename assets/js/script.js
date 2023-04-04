@@ -16,6 +16,10 @@ var goBackBtn = document.querySelector("#go-back");
 var secondLeft = 0;
 var currentIndex = 0;
 var timeInterval;
+var savedScore = {
+    initial: "",
+    score: 0
+}
 
 var questionList = [
     {
@@ -26,56 +30,57 @@ var questionList = [
     },
     {
         questionNo: 2,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
-        correctAnswer: 2
+        questionText: "Which property is used to add space around the content area and within the border-box?",
+        options: ["padding", "margin", "border", "none of above options"],
+        correctAnswer: 0
     },
     {
         questionNo: 3,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
+        questionText: "Which of the following elements is Not an inline element?",
+        options: ["<a>", "<span>", "<div>", "<img>"],
         correctAnswer: 2
     },
     {
         questionNo: 4,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
+        questionText: "What does the === operator compare?",
+        options: ["the type of operands", "the value of operands", "the type and value of operands", "none of the above"],
         correctAnswer: 2
     },
     {
         questionNo: 5,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
-        correctAnswer: 2
+        questionText: "What does a pop() method in JavaScript do?",
+        options: ["delete the last element of an array", "delete the first element of an array", 
+                  "add an element at the end of an element", "add an element at the array's start"],
+        correctAnswer: 0
     },
     {
         questionNo: 6,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
-        correctAnswer: 2
+        questionText: "What is the result of 4+5+'7'?",
+        options: ["16", "97", "they cannot be added to each other", "none of the above"],
+        correctAnswer: 1
     },
     {
         questionNo: 7,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
-        correctAnswer: 2
+        questionText: "As a default, which one is used to center an element horizentally in a flexbox?",
+        options: ["float", "align-items", "text-align", "justify-content"],
+        correctAnswer: 3
     },
     {
         questionNo: 8,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
-        correctAnswer: 2
+        questionText: "Which of the following choice is a position value?",
+        options: ["inline", "sticky", "inline-block", "flex"],
+        correctAnswer: 1
     },
     {
         questionNo: 9,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
-        correctAnswer: 2
+        questionText: "Which one is Not a semantic HTML tag?",
+        options: ["<div>", "<header>", "<p>", "<main>"],
+        correctAnswer: 0
     },
     {
         questionNo: 10,
-        questionText: "Which of the following choice is Not an immutable variable?",
-        options: ["string", "number", "array", "boolean"],
+        questionText: "Which of the following choice is Not define in <head> of an HTML page?",
+        options: ["<meta>", "<title>", "<header>", "<link>"],
         correctAnswer: 2
     }
     
@@ -90,11 +95,17 @@ body.addEventListener("click", function(event){
     if(element.matches("#start-btn")){
         startQuiz();
     }
+
     if(element.matches(".list-item")){
         var chosenOptionData = element.getAttribute("data-no");
         var chosenOption = chosenOptionData[0];
         checkAnswer(chosenOption);
     }
+
+    if(element.matches("#submit-btn")){
+        submitInitial();
+    }
+
 })
 
 //-------------------------------------------------------------refresh page------------------------------------------------------------------
@@ -181,7 +192,6 @@ function checkAnswer(chosenOption){
         answer.textContent = "Wrong!❌";
         secondLeft -= 5;
         if(secondLeft < 0){
-            console.log("else: line 219: "+secondLeft)
             secondLeft = 0;
             clearInterval(timeInterval);
             timeInterval = null;
@@ -193,7 +203,7 @@ function checkAnswer(chosenOption){
     if(currentIndex != questionList.length -1 )
     {
         currentIndex++;
-        nextQuestions();
+        setTimeout(nextQuestions, 500);
     } 
     else{;
         //When user answered all the questions before time out, we stop counter and how them their score and ask for initial
@@ -222,15 +232,49 @@ function showResult(win){
         questionsPage.setAttribute("style", "z-index: 1;")
         highSorePage.setAttribute("style", "z-index: 10;")
         hsHeader.textContent = "Game Over!"; 
-        hsHeader.setAttribute("style", "font-size: 6rem;");
+        showHighScore();
+   /*     hsHeader.setAttribute("style", "font-size: 6rem;");
         initialScore.setAttribute("style", "display: none;");
         clearBtn.setAttribute("style", "display: none;");
-        goBackBtn.setAttribute("style", "margin-left: 9rem;");
+        goBackBtn.setAttribute("style", "margin-left: 9rem;");*/
 
     }
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
+//------------------------------------------------------submit Initial-----------------------------------------------------------------------
+function submitInitial(){
+    var initialText = document.querySelector("#initial");
+    if(initialText.value.trim() !== ""){
+        savedScore.initial = initialText.value;
+        savedScore.score = secondLeft;
+        localStorage.setItem("userScoreStringify", JSON.stringify(savedScore));
+
+        showHighScore();
+        submitPage.setAttribute("style", "z-index: 1;")
+        highSorePage.setAttribute("style", "z-index: 10;")
+    }
+    else{
+        alert("Please enter your initial!")
+    }
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
+
+function showHighScore(){
+    var scoreHistory = JSON.parse(localStorage.getItem("userScoreStringify"));
+    if(scoreHistory !== null){
+        savedScore.initial = scoreHistory.initial;
+        savedScore.score = scoreHistory.score;
+        initialScore.textContent = savedScore.initial + ": " + savedScore.score;
+    }
+    else{
+        initialScore.textContent = " "
+    }
+}
+
+
 
 refreshPage();
+
