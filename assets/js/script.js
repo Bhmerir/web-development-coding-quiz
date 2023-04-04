@@ -11,6 +11,7 @@ var score = document.querySelector("#score");
 //from page of high-score
 var hsHeader = document.querySelector("#hs-header");
 var initialScore = document.querySelector("#initial-score");
+var initialText = document.querySelector("#initial");
 var clearBtn = document.querySelector("#clear");
 var goBackBtn = document.querySelector("#go-back"); 
 var secondLeft = 0;
@@ -106,6 +107,19 @@ body.addEventListener("click", function(event){
         submitInitial();
     }
 
+    if(element.matches("#clear")){
+        // if user clicks the button of clear high score, the saving record in local storage was deleted
+        var scoreHistory = JSON.parse(localStorage.getItem("userScoreStringify"));
+        if(scoreHistory !== null){
+            localStorage.removeItem("userScoreStringify");
+        }
+        showHighScore();
+    }
+
+    if(element.matches("#go-back")){
+        refreshPage();
+    }
+
 })
 
 //-------------------------------------------------------------refresh page------------------------------------------------------------------
@@ -116,15 +130,6 @@ function refreshPage(){
     questionsPage.setAttribute("style", "z-index: 1;")
     submitPage.setAttribute("style", "z-index: 1;")
     highSorePage.setAttribute("style", "z-index: 1;")
-    //As when user becomes game over we change these properties, while refreshing game we have to set them to default
-    var hsHeader = document.querySelector("#hs-header");
-    var initialScore = document.querySelector("#initial-score");
-    var clearBtn = document.querySelector("#clear");
-    var goBackBtn = document.querySelector("#go-back");
-    hsHeader.setAttribute("style", "font-size: 4rem;");
-    initialScore.setAttribute("style", "display: inbox;");
-    clearBtn.setAttribute("style", "display: inbox;")
-    goBackBtn.setAttribute("style", "margin-left: 0rem;");
     currentIndex = 0;
 }
 
@@ -138,7 +143,6 @@ function setTimer(){
         //If there is no second left, we stop the timer 
         if(secondLeft === 0){
             clearInterval(timeInterval);
-            console.log("136: "+currentIndex + " "+ questionList.length)
             if(currentIndex != (questionList.length)){
                 showResult(false);
             }
@@ -190,7 +194,7 @@ function checkAnswer(chosenOption){
     else{
         answer.setAttribute("style", "color: red;");
         answer.textContent = "Wrong!❌";
-        secondLeft -= 5;
+        secondLeft -= 15;
         if(secondLeft < 0){
             secondLeft = 0;
             clearInterval(timeInterval);
@@ -227,30 +231,40 @@ function showResult(win){
         questionsPage.setAttribute("style", "z-index: 1;")
         submitPage.setAttribute("style", "z-index: 10;")
         result.textContent = "All Done!";
+        initialText.value = "";
     }
-    else{                
+    else{               
         questionsPage.setAttribute("style", "z-index: 1;")
-        highSorePage.setAttribute("style", "z-index: 10;")
-        hsHeader.textContent = "Game Over!"; 
-        showHighScore();
-   /*     hsHeader.setAttribute("style", "font-size: 6rem;");
-        initialScore.setAttribute("style", "display: none;");
-        clearBtn.setAttribute("style", "display: none;");
-        goBackBtn.setAttribute("style", "margin-left: 9rem;");*/
-
+        submitPage.setAttribute("style", "z-index: 10;") 
+        result.textContent = "Game Over!"; 
+        timeLeftSpan.textContent = secondLeft;
+        initialText.value = "";
     }
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------submit Initial-----------------------------------------------------------------------
+//This function saves the initial and score in local storage and then goes to the page of high score. If no initial is entered, an alert will be shown
 function submitInitial(){
-    var initialText = document.querySelector("#initial");
     if(initialText.value.trim() !== ""){
-        savedScore.initial = initialText.value;
-        savedScore.score = secondLeft;
-        localStorage.setItem("userScoreStringify", JSON.stringify(savedScore));
+        var scoreHistory = JSON.parse(localStorage.getItem("userScoreStringify"));
+        if(scoreHistory !== null){
+            if(scoreHistory.initial == initialText.value.trim()){
+                // If your current score is less than your previous score, this current score won't save
+                if(scoreHistory.score < secondLeft){
+                    savedScore.initial = initialText.value;
+                    savedScore.score = secondLeft;
+                    localStorage.setItem("userScoreStringify", JSON.stringify(savedScore));
+                }
+            }
+        }
+        else{
 
+            savedScore.initial = initialText.value;
+            savedScore.score = secondLeft;
+            localStorage.setItem("userScoreStringify", JSON.stringify(savedScore));
+        }
         showHighScore();
         submitPage.setAttribute("style", "z-index: 1;")
         highSorePage.setAttribute("style", "z-index: 10;")
@@ -260,8 +274,8 @@ function submitInitial(){
     }
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------------
-
+//---------------------------------------------------show high score-------------------------------------------------------------------------
+//This function shows high score if exists in Highscore page
 function showHighScore(){
     var scoreHistory = JSON.parse(localStorage.getItem("userScoreStringify"));
     if(scoreHistory !== null){
@@ -270,9 +284,10 @@ function showHighScore(){
         initialScore.textContent = savedScore.initial + ": " + savedScore.score;
     }
     else{
-        initialScore.textContent = " "
+        initialScore.textContent = " ";
     }
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
