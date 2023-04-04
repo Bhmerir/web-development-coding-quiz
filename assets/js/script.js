@@ -21,6 +21,7 @@ var savedScore = {
     initial: "",
     score: 0
 }
+var scoreHistoryList = [];
 
 var questionList = [
     {
@@ -108,12 +109,16 @@ body.addEventListener("click", function(event){
     }
 
     if(element.matches("#clear")){
-        // if user clicks the button of clear high score, the saving record in local storage was deleted
-        var scoreHistory = JSON.parse(localStorage.getItem("userScoreStringify"));
-        if(scoreHistory !== null){
-            localStorage.removeItem("userScoreStringify");
+        // if user clicks the button of clear high score, the saving record of that user in local storage was deleted
+        var scoreHistory = JSON.parse(localStorage.getItem("scoreHistoryStringify"));
+        for(var i = 0; i < scoreHistory.length; i++){
+
+            if (scoreHistory[i].initial == initialText.value.trim()){
+                scoreHistory.splice(i , 1);
+            }
         }
-        showHighScore();
+        localStorage.setItem("scoreHistoryStringify", JSON.stringify(scoreHistory));
+        initialScore.textContent = savedScore.initial+":";
     }
 
     if(element.matches("#go-back")){
@@ -131,6 +136,7 @@ function refreshPage(){
     submitPage.setAttribute("style", "z-index: 1;")
     highSorePage.setAttribute("style", "z-index: 1;")
     currentIndex = 0;
+    scoreHistoryList = JSON.parse(localStorage.getItem("scoreHistoryStringify"));
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -213,7 +219,6 @@ function checkAnswer(chosenOption){
         //When user answered all the questions before time out, we stop counter and how them their score and ask for initial
         clearInterval(timeInterval);
         timeInterval = null;
-        score.textContent = secondLeft; 
         // True means win
         showResult(true)
 
@@ -223,11 +228,10 @@ function checkAnswer(chosenOption){
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------show result of quiz------------------------------------------------------------------
-/* if user wins (win = true) , the submit page is shown to ask for initial, and 
-if they lose, the high score page is shown to show game over*/
+/* if user wins (win = true) , it shows All Done and if user loses game over is shown*/
 function showResult(win){
-    if (win){
-        score.textContent = secondLeft; 
+    score.textContent = secondLeft;
+    if (win){ 
         questionsPage.setAttribute("style", "z-index: 1;")
         submitPage.setAttribute("style", "z-index: 10;")
         result.textContent = "All Done!";
@@ -237,7 +241,6 @@ function showResult(win){
         questionsPage.setAttribute("style", "z-index: 1;")
         submitPage.setAttribute("style", "z-index: 10;") 
         result.textContent = "Game Over!"; 
-        timeLeftSpan.textContent = secondLeft;
         initialText.value = "";
     }
 }
@@ -245,25 +248,39 @@ function showResult(win){
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------submit Initial-----------------------------------------------------------------------
-//This function saves the initial and score in local storage and then goes to the page of high score. If no initial is entered, an alert will be shown
+//This function saves the initial and score for each person in local storage and then goes to the page of high score. If no initial is entered, an alert will be shown
 function submitInitial(){
+    var notfound = true;
     if(initialText.value.trim() !== ""){
-        var scoreHistory = JSON.parse(localStorage.getItem("userScoreStringify"));
-        if(scoreHistory !== null){
-            if(scoreHistory.initial == initialText.value.trim()){
-                // If your current score is less than your previous score, this current score won't save
-                if(scoreHistory.score < secondLeft){
-                    savedScore.initial = initialText.value;
-                    savedScore.score = secondLeft;
-                    localStorage.setItem("userScoreStringify", JSON.stringify(savedScore));
+        if(scoreHistoryList !== null){
+            for(var i = 0; i < scoreHistoryList.length; i++){
+                if (scoreHistoryList[i].initial == initialText.value.trim()){
+                    notfound = false;
+                    /*If the user has the saved score in local storage, the current score is checked with previous one,
+                     and if the current score is more than previous one , the previous one is updated */
+                    if (scoreHistoryList[i].score < secondLeft){
+                        scoreHistoryList[i].score = secondLeft;
+                    }  
+                    savedScore.initial = scoreHistoryList[i].initial;
+                    savedScore.score = scoreHistoryList[i].score;
                 }
             }
+            //if user doesn't have a saved score then their score will save in local storage as a new item list
+            if(notfound){
+                savedScore.initial = initialText.value;
+                savedScore.score = secondLeft;
+                scoreHistoryList.push(savedScore);
+            }
+            localStorage.setItem("scoreHistoryStringify", JSON.stringify(scoreHistoryList)); 
         }
         else{
-
+            /*if local storage has no record for any user, a new list is defined and, this first user
+             and their scores is added to that list. The list is saved in local storage*/
             savedScore.initial = initialText.value;
             savedScore.score = secondLeft;
-            localStorage.setItem("userScoreStringify", JSON.stringify(savedScore));
+            scoreHistoryList = [];
+            scoreHistoryList.push(savedScore);
+            localStorage.setItem("scoreHistoryStringify", JSON.stringify(scoreHistoryList));
         }
         showHighScore();
         submitPage.setAttribute("style", "z-index: 1;")
@@ -275,17 +292,15 @@ function submitInitial(){
 }
 
 //---------------------------------------------------show high score-------------------------------------------------------------------------
-//This function shows high score if exists in Highscore page
+//This function shows high score for each initial if exists in Highscore page
 function showHighScore(){
-    var scoreHistory = JSON.parse(localStorage.getItem("userScoreStringify"));
-    if(scoreHistory !== null){
-        savedScore.initial = scoreHistory.initial;
-        savedScore.score = scoreHistory.score;
-        initialScore.textContent = savedScore.initial + ": " + savedScore.score;
+    for(var i = 0; i < scoreHistoryList.length; i++){
+        if (scoreHistoryList[i].initial == initialText.value.trim()){
+            savedScore.initial = scoreHistoryList[i].initial;
+            savedScore.score = scoreHistoryList[i].score;
+        }
     }
-    else{
-        initialScore.textContent = " ";
-    }
+    initialScore.textContent = savedScore.initial + ": " + savedScore.score;
 }
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
